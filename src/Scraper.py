@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import os 
 
+
 def get_captcha(index):
     try:
         # Step 1: Request the main URL
@@ -14,10 +15,12 @@ def get_captcha(index):
             # Step 2: Parse the source code
             html_doc = response.text
             soup = BeautifulSoup(html_doc, 'html.parser')       
-        
+
             # Step 3: Extract the captcha URL
             captcha_url = soup.find('img', id='val_code').get('src')
-        
+
+            captcha_url = 'https://west-mrms.codm.activision.com/commonAct/codmwest_cdk_center/valCode.php?sServiceType=codmatvi&codeKey=ca77d4727176664cf187f3d03e67f45f&_rand=0.34989549791903407'
+            
             # Step 4: Download the captcha Image
             captcha_image = requests.get(captcha_url)
             items = os.listdir(f'{os.getcwd()}/downloaded_images')
@@ -34,10 +37,6 @@ def get_captcha(index):
                 print(f'Captcha image saved as {file_name}')
             
     except Exception as e:
-        print(f"error raised! the status code is {response.status_code}.")
         print(f'eror: {e}')
-
-
-
-
+        print(f"error raised! the status code is {response.status_code}.")
 
