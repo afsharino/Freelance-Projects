@@ -1,11 +1,11 @@
 # Import Libraries
-import requests
-from bs4 import BeautifulSoup
 import os 
-
+import requests
+import concurrent.futures
+from bs4 import BeautifulSoup
 
 def get_captcha(index):
-    try:
+    #try:
         # Step 1: Request the main URL
         base_url = 'https://www.callofduty.com/redemption'
         response = requests.get(base_url)
@@ -23,20 +23,22 @@ def get_captcha(index):
             
             # Step 4: Download the captcha Image
             captcha_image = requests.get(captcha_url)
-            items = os.listdir(f'{os.getcwd()}/downloaded_images')
+            items = os.listdir(f'{os.getcwd()}/test_images')
 
-            if index < len(items):
-                file_name = f'captcha_{len(items)}.png'
-                file_path = os.path.join('./downloaded_images', file_name)
+            if f'captcha_{index}.png' in os.listdir('./test_images'):
+                pass
             else:
                 file_name = f'captcha_{index}.png'
-                file_path = os.path.join('./downloaded_images', file_name)
+                file_path = os.path.join('./test_images', file_name)
 
             with open(file_path , 'wb') as file:
                 file.write(captcha_image.content)
                 print(f'Captcha image saved as {file_name}')
             
-    except Exception as e:
-        print(f'eror: {e}')
-        print(f"error raised! the status code is {response.status_code}.")
+    #except Exception as e:
+     #   print(f'eror: {e}')
+      #  print(f"error raised! the status code is {response.status_code}.")
 
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+     executor.map(get_captcha, range(100))
